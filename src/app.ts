@@ -4,6 +4,8 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/skip';
 
 replaceConsoleLog();
 
@@ -210,3 +212,12 @@ replaceConsoleLog();
 //             console.log(`flatMap stream value: ${streamValue}`);
 //         }
 //     );
+
+// // skip + first operator
+// new TimerObservable(1000, 1000)
+//     .skip(3)
+//     .first()
+//     .subscribe(
+//         tick => console.log(`first operator stream value: ${tick}`)
+//     );
+//
