@@ -1,6 +1,6 @@
 import { replaceConsoleLog } from '../browser/console.log';
 import 'rxjs/add/observable/of';
-import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 replaceConsoleLog();
 
@@ -12,7 +12,7 @@ replaceConsoleLog();
 //     streamValue => console.log(streamValue)
 // );
 
-// const customObservable = new Observable(
+// const customObservable = new Observable<number>(
 //     observer => {
 //         let tick = 0;
 //         const intervalRef = setInterval(
@@ -54,32 +54,67 @@ replaceConsoleLog();
 //     customObservableSubscription.unsubscribe();
 // }, 3000);
 
-// ez a serviceben lenne
-const firstSubject = new Subject();
-// serviceben kezelem rogton az erteket
-const subscription = firstSubject.subscribe(
+// // ez a serviceben lenne
+// const firstSubject = new Subject();
+// // serviceben kezelem rogton az erteket
+// const subscription = firstSubject.subscribe(
+//     streamValue => {
+//         console.log(`Subject stream value: ${streamValue}`);
+//     }
+// );
+// let tick = 0;
+// // server adatkuldes emulalas
+// setInterval(() => {
+//         firstSubject.next(tick++);
+//         if (tick === 3) {
+//             subscription.unsubscribe();
+//         }
+//     }
+//     , 1000);
+//
+// // componentbe feliratkozo
+// setTimeout(
+//     () => {
+//         firstSubject.subscribe(
+//             streamValue => {
+//                 console.log(`Second subscriber stream value: ${streamValue}`);
+//             }
+//         );
+//     },
+//     5000
+// );
+
+// const firstBehaviorSubject = new BehaviorSubject<string>('stored value');
+// firstBehaviorSubject.subscribe(
+//     streamValue=>{
+//         console.log(`Behavior subject stream value: ${streamValue}`);
+//     }
+// );
+// firstBehaviorSubject.next('second value');
+// firstBehaviorSubject.subscribe(
+//     streamValue=>{
+//         console.log(`Behavior subject stream value2: ${streamValue}`);
+//     }
+// );
+
+const firstReplaySubject = new ReplaySubject(5);
+firstReplaySubject.subscribe(
     streamValue => {
-        console.log(`Subject stream value: ${streamValue}`);
+        console.log(`Replay subject stream value: ${streamValue}`);
     }
 );
+console.log('subscribe');
 let tick = 0;
-// server adatkuldes emulalas
-setInterval(() => {
-        firstSubject.next(tick++);
-        if (tick === 3) {
-            subscription.unsubscribe();
-        }
-    }
-    , 1000);
-
-// componentbe feliratkozo
-setTimeout(
-    () => {
-        firstSubject.subscribe(
+const intervalRef = setInterval(() => {
+    firstReplaySubject.next(tick++);
+    if (tick === 6) {
+        firstReplaySubject.subscribe(
             streamValue => {
                 console.log(`Second subscriber stream value: ${streamValue}`);
             }
         );
-    },
-    5000
-);
+    }
+    if (tick === 10) {
+        clearInterval(intervalRef);
+    }
+}, 1000);
