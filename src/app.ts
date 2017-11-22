@@ -1,5 +1,6 @@
 import { replaceConsoleLog } from '../browser/console.log';
 import 'rxjs/add/observable/of';
+import { Subject } from 'rxjs/Subject';
 
 replaceConsoleLog();
 
@@ -49,7 +50,36 @@ replaceConsoleLog();
 //
 // }, 5000);
 
-setTimeout(() => {
-    customObservableSubscription.unsubscribe();
-}, 3000);
+// setTimeout(() => {
+//     customObservableSubscription.unsubscribe();
+// }, 3000);
 
+// ez a serviceben lenne
+const firstSubject = new Subject();
+// serviceben kezelem rogton az erteket
+const subscription = firstSubject.subscribe(
+    streamValue => {
+        console.log(`Subject stream value: ${streamValue}`);
+    }
+);
+let tick = 0;
+// server adatkuldes emulalas
+setInterval(() => {
+        firstSubject.next(tick++);
+        if (tick === 3) {
+            subscription.unsubscribe();
+        }
+    }
+    , 1000);
+
+// componentbe feliratkozo
+setTimeout(
+    () => {
+        firstSubject.subscribe(
+            streamValue => {
+                console.log(`Second subscriber stream value: ${streamValue}`);
+            }
+        );
+    },
+    5000
+);
