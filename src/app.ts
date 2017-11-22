@@ -2,6 +2,8 @@ import { replaceConsoleLog } from '../browser/console.log';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/map';
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
+import 'rxjs/add/operator/mapTo';
 
 replaceConsoleLog();
 
@@ -139,6 +141,7 @@ replaceConsoleLog();
 //     }
 // );
 
+// // map operator
 // const timer = new TimerObservable(1000, 1000);
 // // timer.subscribe(
 // //     tick => console.log(`timer tick: ${tick}`)
@@ -162,3 +165,11 @@ replaceConsoleLog();
 //     .subscribe(
 //         tick => console.log(tick)
 //     );
+
+// mapTo operator
+const timer = new TimerObservable(1000, 1000);
+timer
+    .mapTo('value')
+    .subscribe(
+        tick => console.log(tick)
+    );
