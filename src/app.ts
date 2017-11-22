@@ -2,8 +2,8 @@ import { replaceConsoleLog } from '../browser/console.log';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/map';
-import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import 'rxjs/add/operator/mapTo';
+import 'rxjs/add/operator/mergeMap';
 
 replaceConsoleLog();
 
@@ -166,10 +166,47 @@ replaceConsoleLog();
 //         tick => console.log(tick)
 //     );
 
-// mapTo operator
-const timer = new TimerObservable(1000, 1000);
-timer
-    .mapTo('value')
-    .subscribe(
-        tick => console.log(tick)
-    );
+// // mapTo operator
+// const timer = new TimerObservable(1000, 1000);
+// timer
+//     .mapTo('value')
+//     .subscribe(
+//         tick => console.log(tick)
+//     );
+
+// // flatMap operator
+// new TimerObservable(5000).flatMap(
+//     tick => {
+//         return Observable.of('flatMap value');
+//     }
+// ).subscribe(
+//     streamValue => {
+//         console.log(`flatMap stream value: ${streamValue}`);
+//     }
+// );
+
+// const timer = new TimerObservable(2000, 2000);
+// new TimerObservable(5000)
+//     .map(
+//         tick => {
+//             console.log('call map operator');
+//             return tick;
+//         }
+//     )
+//     .flatMap(
+//         tick => {
+//             console.log('call flatMap operator');
+//             return timer;
+//         }
+//     )
+//     .map(
+//         tick => {
+//             console.log('call second map operator');
+//             return `mapped tick value: ${tick}`;
+//         }
+//     )
+//     .subscribe(
+//         streamValue => {
+//             console.log(`flatMap stream value: ${streamValue}`);
+//         }
+//     );
