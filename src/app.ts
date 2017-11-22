@@ -1,6 +1,6 @@
 import { replaceConsoleLog } from '../browser/console.log';
 import 'rxjs/add/observable/of';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import 'rxjs/add/observable/from';
 
 replaceConsoleLog();
 
@@ -97,24 +97,45 @@ replaceConsoleLog();
 //     }
 // );
 
-const firstReplaySubject = new ReplaySubject(5);
-firstReplaySubject.subscribe(
-    streamValue => {
-        console.log(`Replay subject stream value: ${streamValue}`);
-    }
-);
-console.log('subscribe');
-let tick = 0;
-const intervalRef = setInterval(() => {
-    firstReplaySubject.next(tick++);
-    if (tick === 6) {
-        firstReplaySubject.subscribe(
-            streamValue => {
-                console.log(`Second subscriber stream value: ${streamValue}`);
-            }
-        );
-    }
-    if (tick === 10) {
-        clearInterval(intervalRef);
-    }
-}, 1000);
+// const firstReplaySubject = new ReplaySubject(5);
+// firstReplaySubject.subscribe(
+//     streamValue => {
+//         console.log(`Replay subject stream value: ${streamValue}`);
+//     }
+// );
+// console.log('subscribe');
+// let tick = 0;
+// const intervalRef = setInterval(() => {
+//     firstReplaySubject.next(tick++);
+//     if (tick === 6) {
+//         firstReplaySubject.subscribe(
+//             streamValue => {
+//                 console.log(`Second subscriber stream value: ${streamValue}`);
+//             }
+//         );
+//     }
+//     if (tick === 10) {
+//         clearInterval(intervalRef);
+//     }
+// }, 1000);
+
+
+// const of = Observable.of<any>({ name: 'Someone' }, [99, 22, 553], () => {return 'function result string';});
+// of.subscribe(
+//     val => {
+//         if (val instanceof Function) {
+//             console.log(val());
+//         } else {
+//             console.log(val);
+//         }
+//     }
+// );
+
+// const from = Observable.from(['one', 'two', '...']);
+// from.subscribe(
+//     streamValue => {
+//         console.log(`from stream value: ${streamValue}`);
+//     }
+// );
+
+
