@@ -1,6 +1,7 @@
 import { replaceConsoleLog } from '../browser/console.log';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/map';
 
 replaceConsoleLog();
 
@@ -138,4 +139,26 @@ replaceConsoleLog();
 //     }
 // );
 
-
+// const timer = new TimerObservable(1000, 1000);
+// // timer.subscribe(
+// //     tick => console.log(`timer tick: ${tick}`)
+// // );
+// // const mappedTimer = timer.map(
+// //     tick => {
+// //         return `tick: ${tick}`;
+// //     }
+// // );
+// //
+// // mappedTimer.subscribe(
+// //     tick => console.log(tick)
+// // );
+//
+// timer
+//     .map(
+//         tick => {
+//             return `tick: ${tick}`;
+//         }
+//     )
+//     .subscribe(
+//         tick => console.log(tick)
+//     );
