@@ -1,6 +1,8 @@
 import {replaceConsoleLog} from "../browser/console.log";
 import "rxjs/add/observable/of";
 import {ReplaySubject} from "rxjs/ReplaySubject";
+import {Observable} from "rxjs/Observable";
+import "rxjs/add/observable/from";
 
 
 replaceConsoleLog();
@@ -113,6 +115,7 @@ replaceConsoleLog();
 // a replay subject-hasonlo a behavior subjecthez de nincsen init erteke,
 //es meg tudjuk mondani neki hogy hany utolso allapotot taroljon
 
+/*
 const firstReplaySubject = new ReplaySubject(3);
 
 firstReplaySubject.subscribe(
@@ -138,3 +141,26 @@ const intervalRef = setInterval(
         }
     },1000
 );
+*/
+/*const of = Observable.of<any>({name: 'Someone'}, [99,22,553], () => {return 'function result string';});
+of.subscribe(
+    val => {
+        if(val instanceof Function){
+            console.log(val());
+        }else{
+            console.log(val);
+        }
+    }
+);*/
+
+/*
+const from = Observable.from(['one', 'two', '...']);
+//tombot var es a tombot fogja felbontani es ugy irja ki
+
+from.subscribe(
+    streamValue => {
+        console.log(`from stream value: ${streamValue}`);
+    }
+)*/
+
+
