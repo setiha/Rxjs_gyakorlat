@@ -3,6 +3,7 @@ import "rxjs/add/observable/of";
 import "rxjs/add/observable/from";
 import {TimerObservable} from "rxjs/observable/TimerObservable";
 import "rxjs/add/operator/map";
+import "rxjs/add/operator/mapTo";
 
 
 replaceConsoleLog();
@@ -193,3 +194,11 @@ timer.subscribe(
     .subscribe(
         tick => console.log(tick)
     );*/
+
+//mapTo operator
+ const newTimer = new TimerObservable(1000, 1000);
+newTimer
+    .mapTo('value')
+    .subscribe(
+        tick => console.log(tick)
+    );
