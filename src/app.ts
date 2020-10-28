@@ -1,6 +1,6 @@
 import {replaceConsoleLog} from "../browser/console.log";
 import "rxjs/add/observable/of";
-import {Subject} from "rxjs/Subject";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 
 replaceConsoleLog();
@@ -69,28 +69,72 @@ replaceConsoleLog();
  );*/
 
 //subject
-const firstSubject = new Subject();
+/*
+ const firstSubject = new Subject();
 
-const subscription = firstSubject.subscribe(
+ const subscription = firstSubject.subscribe(
+ streamValue => {
+ console.log(` Subject streamValue : ${streamValue}`);
+ }
+ );
+
+ let tick = 0;
+
+ setInterval(() => {
+ firstSubject.next(tick++);
+ if (tick === 3) {
+ subscription.unsubscribe();
+ }
+
+ }, 1000);
+
+ setTimeout(() => {
+ firstSubject.subscribe(
+ streamValue => {
+ console.log(`Second subscriber stream value: ${streamValue}`);
+ }
+ )
+ }, 5000);*/
+
+/*
+ const firstBehaviorSubject = new BehaviorSubject<string>('stored value');
+ firstBehaviorSubject.subscribe(
+ streamValue => {
+ console.log(`Behavior subject stream value: ${streamValue}`);
+ }
+ )
+ firstBehaviorSubject.next('second value');
+ firstBehaviorSubject.subscribe(
+ streamValue => {
+ console.log(`Behavior subject stream value2: ${streamValue}`);
+ }
+ );*/
+
+// a replay subject-hasonlo a behavior subjecthez de nincsen init erteke,
+//es meg tudjuk mondani neki hogy hany utolso allapotot taroljon
+
+const firstReplaySubject = new ReplaySubject(3);
+
+firstReplaySubject.subscribe(
     streamValue => {
-        console.log(` Subject streamValue : ${streamValue}`);
+        console.log(`Replay subject stream value: ${streamValue}`);
     }
 );
 
+console.log('subscribe');
 let tick = 0;
-
-setInterval(() => {
-    firstSubject.next(tick++);
-    if (tick === 3) {
-        subscription.unsubscribe();
-    }
-    
-}, 1000);
-
-setTimeout(() => {
-    firstSubject.subscribe(
-        streamValue => {
-            console.log(`Second subscriber stream value: ${streamValue}`);
+const intervalRef = setInterval(
+    () => {
+        firstReplaySubject.next(tick++);
+        if (tick === 6) {
+            firstReplaySubject.subscribe(
+                streamValue => {
+                    console.log(`Second subscriber stream value: ${streamValue}`)
+                }
+            );
         }
-    )
-}, 5000);
+        if(tick === 10){
+            clearInterval(intervalRef);
+        }
+    },1000
+);
