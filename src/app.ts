@@ -1,8 +1,8 @@
 import {replaceConsoleLog} from "../browser/console.log";
 import "rxjs/add/observable/of";
-import {ReplaySubject} from "rxjs/ReplaySubject";
-import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
+import {TimerObservable} from "rxjs/observable/TimerObservable";
+import "rxjs/add/operator/map";
 
 
 replaceConsoleLog();
@@ -116,51 +116,80 @@ replaceConsoleLog();
 //es meg tudjuk mondani neki hogy hany utolso allapotot taroljon
 
 /*
-const firstReplaySubject = new ReplaySubject(3);
+ const firstReplaySubject = new ReplaySubject(3);
 
-firstReplaySubject.subscribe(
-    streamValue => {
-        console.log(`Replay subject stream value: ${streamValue}`);
-    }
-);
+ firstReplaySubject.subscribe(
+ streamValue => {
+ console.log(`Replay subject stream value: ${streamValue}`);
+ }
+ );
 
-console.log('subscribe');
-let tick = 0;
-const intervalRef = setInterval(
-    () => {
-        firstReplaySubject.next(tick++);
-        if (tick === 6) {
-            firstReplaySubject.subscribe(
-                streamValue => {
-                    console.log(`Second subscriber stream value: ${streamValue}`)
-                }
-            );
-        }
-        if(tick === 10){
-            clearInterval(intervalRef);
-        }
-    },1000
-);
-*/
+ console.log('subscribe');
+ let tick = 0;
+ const intervalRef = setInterval(
+ () => {
+ firstReplaySubject.next(tick++);
+ if (tick === 6) {
+ firstReplaySubject.subscribe(
+ streamValue => {
+ console.log(`Second subscriber stream value: ${streamValue}`)
+ }
+ );
+ }
+ if(tick === 10){
+ clearInterval(intervalRef);
+ }
+ },1000
+ );
+ */
 /*const of = Observable.of<any>({name: 'Someone'}, [99,22,553], () => {return 'function result string';});
-of.subscribe(
-    val => {
-        if(val instanceof Function){
-            console.log(val());
-        }else{
-            console.log(val);
-        }
-    }
-);*/
+ of.subscribe(
+ val => {
+ if(val instanceof Function){
+ console.log(val());
+ }else{
+ console.log(val);
+ }
+ }
+ );*/
 
 /*
-const from = Observable.from(['one', 'two', '...']);
-//tombot var es a tombot fogja felbontani es ugy irja ki
+ const from = Observable.from(['one', 'two', '...']);
+ //tombot var es a tombot fogja felbontani es ugy irja ki
 
-from.subscribe(
-    streamValue => {
-        console.log(`from stream value: ${streamValue}`);
-    }
-)*/
+ from.subscribe(
+ streamValue => {
+ console.log(`from stream value: ${streamValue}`);
+ }
+ )*/
 
+const timer = new TimerObservable(1000, 1000);
+/*
+timer.subscribe(
+    tick => console.log(`timer tick: ${tick}`)
+);
+*/
 
+/*const mappedTimer = timer.map(
+ //az adatot modositja asubscriber azt kapja meg
+ tick => {
+ return `tick: ${tick}`
+ }
+ );
+ mappedTimer.subscribe(
+ tick => console.log(tick)
+ );*/
+//Timer observable - megfelel a setIntervalnak is es a setTimeoutnak is
+// attol fuggoen hany parametert adunk at neki
+//1 parameter setTimout
+//2 parameter set interval -elso elindulas masodik a tick
+
+/*timer
+    .map(
+        tick => {
+            return `tick: ${tick}`;
+        }
+    )
+    .subscribe(
+        tick => console.log(tick)
+    );*/
