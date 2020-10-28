@@ -4,6 +4,7 @@ import "rxjs/add/observable/from";
 import {TimerObservable} from "rxjs/observable/TimerObservable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mapTo";
+import "rxjs/add/operator/mergeMap";
 
 
 replaceConsoleLog();
@@ -166,10 +167,10 @@ replaceConsoleLog();
 
 const timer = new TimerObservable(1000, 1000);
 /*
-timer.subscribe(
-    tick => console.log(`timer tick: ${tick}`)
-);
-*/
+ timer.subscribe(
+ tick => console.log(`timer tick: ${tick}`)
+ );
+ */
 
 /*const mappedTimer = timer.map(
  //az adatot modositja asubscriber azt kapja meg
@@ -186,19 +187,60 @@ timer.subscribe(
 //2 parameter set interval -elso elindulas masodik a tick
 
 /*timer
+ .map(
+ tick => {
+ return `tick: ${tick}`;
+ }
+ )
+ .subscribe(
+ tick => console.log(tick)
+ );*/
+
+//mapTo operator
+/*const newTimer = new TimerObservable(1000, 1000);
+ newTimer
+ .mapTo('value')
+ .subscribe(
+ tick => console.log(tick)
+ );*/
+
+
+//flat map operator
+
+/*new TimerObservable(5000).flatMap(
+ //a flatMap operatorral elkapjuk es modositjuk az ellott tick-et.
+ tick => {
+ return  Observable.of('flatMap value');
+ }
+ ).subscribe(
+ streamValue => {
+ console.log(`flatMap stream value: ${streamValue}`);
+ }
+ );*/
+
+const newTimer = new TimerObservable(2000, 2000);
+
+new TimerObservable(5000)
     .map(
         tick => {
-            return `tick: ${tick}`;
+            console.log('call map operator');
+            return tick;
+        }
+    )
+    .flatMap(
+        tick => {
+            console.log('call flatMap operator');
+            return newTimer;
+        }
+    )
+    .map(
+        tick => {
+            console.log('call second map operator');
+            return `mapped tick value: ${tick}`;
         }
     )
     .subscribe(
-        tick => console.log(tick)
-    );*/
-
-//mapTo operator
- const newTimer = new TimerObservable(1000, 1000);
-newTimer
-    .mapTo('value')
-    .subscribe(
-        tick => console.log(tick)
-    );
+    streamValue => {
+        console.log(`flatMap stream value: ${streamValue}`);
+    }
+);
