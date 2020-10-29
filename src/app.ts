@@ -5,6 +5,12 @@ import {TimerObservable} from "rxjs/observable/TimerObservable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mapTo";
 import "rxjs/add/operator/mergeMap";
+import "rxjs/add/operator/switchMap";
+import {Observable} from "rxjs/Observable";
+import "rxjs/add/observable/interval";
+import "rxjs/add/observable/timer";
+import "rxjs/add/operator/first";
+import "rxjs/add/operator/skip";
 
 
 replaceConsoleLog();
@@ -205,7 +211,7 @@ const timer = new TimerObservable(1000, 1000);
  );*/
 
 
-//flat map operator
+//flatMap operator
 
 /*new TimerObservable(5000).flatMap(
  //a flatMap operatorral elkapjuk es modositjuk az ellott tick-et.
@@ -218,6 +224,7 @@ const timer = new TimerObservable(1000, 1000);
  }
  );*/
 
+/*
 const newTimer = new TimerObservable(2000, 2000);
 
 new TimerObservable(5000)
@@ -243,4 +250,12 @@ new TimerObservable(5000)
     streamValue => {
         console.log(`flatMap stream value: ${streamValue}`);
     }
-);
+);*/
+/*
+// skip + first operator
+new TimerObservable(1000,1000)
+    .skip(3)
+    .first()
+    .subscribe(
+        tick => console.log(`first operator stream value : ${tick}`)
+    );*/
