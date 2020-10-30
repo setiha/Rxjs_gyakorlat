@@ -1,7 +1,7 @@
+///<reference path="../node_modules/rxjs/operator/reduce.d.ts"/>
 import {replaceConsoleLog} from "../browser/console.log";
 import "rxjs/add/observable/of";
 import "rxjs/add/observable/from";
-import {TimerObservable} from "rxjs/observable/TimerObservable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mapTo";
 import "rxjs/add/operator/mergeMap";
@@ -11,8 +11,14 @@ import "rxjs/add/observable/interval";
 import "rxjs/add/observable/timer";
 import "rxjs/add/operator/first";
 import "rxjs/add/operator/skip";
-
-
+import "rxjs/add/operator/do";
+import "rxjs/add/operator/share";
+import "rxjs/add/observable/throw";
+import "rxjs/add/operator/catch";
+import "rxjs/add/operator/retry";
+import "rxjs/add/operator/retryWhen";
+import "rxjs/add/operator/delay";
+import "rxjs/add/operator/delayWhen";
 replaceConsoleLog();
 
 /*
@@ -171,7 +177,7 @@ replaceConsoleLog();
  }
  )*/
 
-const timer = new TimerObservable(1000, 1000);
+/*const timer = new TimerObservable(1000, 1000);*/
 /*
  timer.subscribe(
  tick => console.log(`timer tick: ${tick}`)
@@ -225,37 +231,159 @@ const timer = new TimerObservable(1000, 1000);
  );*/
 
 /*
-const newTimer = new TimerObservable(2000, 2000);
+ const newTimer = new TimerObservable(2000, 2000);
 
-new TimerObservable(5000)
-    .map(
-        tick => {
-            console.log('call map operator');
-            return tick;
-        }
-    )
-    .flatMap(
-        tick => {
-            console.log('call flatMap operator');
-            return newTimer;
-        }
-    )
-    .map(
-        tick => {
-            console.log('call second map operator');
-            return `mapped tick value: ${tick}`;
-        }
-    )
-    .subscribe(
-    streamValue => {
-        console.log(`flatMap stream value: ${streamValue}`);
-    }
-);*/
+ new TimerObservable(5000)
+ .map(
+ tick => {
+ console.log('call map operator');
+ return tick;
+ }
+ )
+ .flatMap(
+ tick => {
+ console.log('call flatMap operator');
+ return newTimer;
+ }
+ )
+ .map(
+ tick => {
+ console.log('call second map operator');
+ return `mapped tick value: ${tick}`;
+ }
+ )
+ .subscribe(
+ streamValue => {
+ console.log(`flatMap stream value: ${streamValue}`);
+ }
+ );*/
 /*
-// skip + first operator
-new TimerObservable(1000,1000)
-    .skip(3)
-    .first()
-    .subscribe(
-        tick => console.log(`first operator stream value : ${tick}`)
-    );*/
+ // skip + first operator
+ new TimerObservable(1000,1000)
+ .skip(3)
+ .first()
+ .subscribe(
+ tick => console.log(`first operator stream value : ${tick}`)
+ );*/
+/*
+
+ // do operator
+
+ new TimerObservable(1000,1000)
+ .do(
+ tick => {
+ console.log(`first do: ${tick}`)
+ }
+ )
+ .map(
+ tick => `mapped new tick value: ${tick}`
+ )
+ .do(
+ tick => {
+ console.log(`second do: ${tick}`)
+ }
+ )
+ .subscribe(
+ streamValue => console.log(`stream value: ${streamValue}`)
+ );
+ */
+
+/*
+ //mergeMap
+ const getData = (param) => {
+ return of(`retrieved new data with param ${param}`).pipe(
+ delay(1000)
+ )
+ }
+
+ from([1,2,3,4]).pipe(mergeMap(param => getData(param))).subscribe(val => console.log(val));
+ */
+
+/*const getData = (param) => {
+ return Observable.of(`retrieved new data with param ${param}`)
+ };
+
+ Observable.from([1,2,3,4]).mergeMap(param => getData(param)).subscribe(val => console.log(val));*/
+
+/*
+ // share operator
+
+ const timer = new TimerObservable(1000,1000).share();
+ timer.subscribe(
+ tick => console.log(`first timer subscriber: ${tick}`)
+ );
+
+ setTimeout(
+ () =>{
+ timer.subscribe(
+ tick => console.log(`second timer subscriber: ${tick}`)
+ )
+ },4000
+ )*/
+
+/*
+ //catch, throw error, retry
+ let source = Observable.interval(1000)
+ .flatMap(
+ tick => {
+ if (tick > 3) {
+ return Observable.throw(new Error('Error'));
+ } else {
+ return Observable.of(tick);
+ }
+ }
+ )
+ .retry(2)
+ .catch(
+ error => {
+ console.log(`catch operator error: ${error}`);
+ return Observable.of(error);
+ }
+ );
+
+ source.subscribe(
+ val => {
+ if(val instanceof Error){
+ console.log(`subscriber value detect error: ${val}`);
+ }else{
+ console.log(`subscriber value: ${val}`);
+ }
+ },
+ error => {
+ console.log(`subscriber error: ${error}`)
+ }
+ )
+ */
+
+//retrywhen
+let source = Observable.interval(1000)
+    .map(
+        tick => {
+            if (tick > 2) {
+                throw new Error('New error');
+            } else {
+                return tick;
+            }
+        }
+    )
+    .retryWhen(
+      error => {
+          return error.do(val => console.log(`val: ${val}`))
+              //.delay(1000);
+              .delayWhen(
+                  val => {
+                      console.log('call delayWhen');
+                      return Observable.timer(3000);
+                  }
+              )
+      }
+    );
+
+source.subscribe(
+    valueStream => {
+            console.log(`subscriber value: ${valueStream}`)
+    },
+    error => {
+        console.log(`subscriber error: ${error}`)
+    }
+)
